@@ -2,16 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Auth\Authenticatable;
-use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Lumen\Auth\Authorizable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 
-class User extends Model implements AuthenticatableContract, AuthorizableContract
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $surname
+ * @property string $email
+ * @property Collection $devices
+ */
+class User extends Model
 {
-    use Authenticatable, Authorizable, HasFactory;
+    protected $hidden = [
+        'created_at', 'updated_at'
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -23,11 +29,24 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     ];
 
     /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
+     * @return HasMany
      */
-    protected $hidden = [
-        'password',
-    ];
+    public function devices(): HasMany
+    {
+        return $this->hasMany(Device::class, 'user_id', 'id');
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'surname' => $this->surname,
+            'email' => $this->email,
+            'devices' => $this->devices
+        ];
+    }
 }
