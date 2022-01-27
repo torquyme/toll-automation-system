@@ -22,8 +22,8 @@ $router->get('/users', 'UserController@all');
 //Route to get a user by id
 $router->get('/user', 'UserController@find');
 
-//Route to get a user bills
-$router->get('/user/bills', 'UserController@bills');
+//Route to get a user invoices
+$router->get('/user/invoices', 'UserController@invoices');
 
 //Route to create a user
 $router->post('/user', 'UserController@create');

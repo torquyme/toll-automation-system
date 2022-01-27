@@ -66,7 +66,7 @@ class UserController extends Controller
         return response()->json($user);
     }
 
-    public function bills(Request $request)
+    public function invoices(Request $request)
     {
         $data = $this->validate(
             $request,
