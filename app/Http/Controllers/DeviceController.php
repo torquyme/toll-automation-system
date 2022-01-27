@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Device;
+use App\Services\DeviceService;
 use App\Types\DeviceStatus;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,6 +12,13 @@ use Illuminate\Validation\Rule;
 
 class DeviceController extends Controller
 {
+    private $deviceService;
+
+    public function __construct(DeviceService $deviceService)
+    {
+        $this->deviceService = $deviceService;
+    }
+
     /**
      * @return Collection
      */
@@ -55,5 +63,21 @@ class DeviceController extends Controller
         $device->save();
 
         return response()->json(true);
+    }
+
+
+    /**
+     * @param Request $request
+     * @return Device
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function logs(Request $request): Collection
+    {
+        $data = $this->validate(
+            $request,
+            ['id' => 'int|required']
+        );
+
+        return $this->deviceService->getDeviceLogs($data['id']);
     }
 }

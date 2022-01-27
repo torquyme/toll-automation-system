@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDevicesPathsTable extends Migration
+class CreateInvoicesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,13 @@ class CreateDevicesPathsTable extends Migration
      */
     public function up()
     {
-        Schema::create('devices_paths', function (Blueprint $table) {
+        Schema::create('invoices', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->references('id')->on('users');
             $table->foreignId('device_id')->references('id')->on('devices');
-            $table->foreignId('path_id')->references('id')->on('paths');
-            $table->tinyInteger('status');
+            $table->longText('routes');
+            $table->decimal('amount');
+            $table->timestamps();
         });
     }
 
@@ -28,6 +30,6 @@ class CreateDevicesPathsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('devices_paths');
+        Schema::dropIfExists('invoices');
     }
 }

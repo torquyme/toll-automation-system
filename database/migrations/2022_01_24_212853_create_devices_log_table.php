@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePathsTable extends Migration
+class CreateDevicesLogTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreatePathsTable extends Migration
      */
     public function up()
     {
-        Schema::create('paths', function (Blueprint $table) {
+        Schema::create('stations_logs', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('station_id')->references('id')->on('stations');
+            $table->foreignId('device_id')->references('id')->on('devices');
+            $table->tinyInteger('status');
             $table->timestamps();
-            $table->foreignId('start_station')->references('id')->on('stations');
-            $table->foreignId('end_station')->references('id')->on('stations');
-            $table->float('cost');
         });
     }
 
@@ -29,6 +29,6 @@ class CreatePathsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('paths');
+        Schema::dropIfExists('devices_log');
     }
 }

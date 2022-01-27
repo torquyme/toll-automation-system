@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Path;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 
 class PathController extends Controller
@@ -54,26 +53,14 @@ class PathController extends Controller
         $path->start_station = $data['startStationId'];
         $path->end_station = $data['endStationId'];
         $path->cost = $data['cost'];
-        $path->length = $data['length'];
         $path->save();
 
-        return response()->json($path);
-    }
+        $returnPath = new Path();
+        $returnPath->end_station = $data['startStationId'];
+        $returnPath->start_station = $data['endStationId'];
+        $returnPath->cost = $data['cost'];
+        $returnPath->save();
 
-    /**
-     * @param Request $request
-     * @return Response
-     */
-    public function enter(Request $request): Response
-    {
-        $data = $this->validate(
-            $request,
-            [
-                'deviceId' => 'int|required|exists:devices,id',
-                'stationId' => 'int|required|exists:stations,id'
-            ]
-        );
-
-
+        return response()->json([$path, $returnPath]);
     }
 }

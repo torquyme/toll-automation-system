@@ -1,0 +1,25 @@
+version: "3.7"
+services:
+  web:
+    image: nginx:1.17
+    networks:
+      - tas_network
+    ports:
+      - "80:80"
+    volumes:
+      - ../:/var/www/tas
+      - ./conf.d:/etc/nginx/conf.d
+    depends_on:
+      - php
+
+  php:
+    build: .
+    networks:
+      - tas_network
+    expose:
+      - 9000
+    volumes:
+      - ../:/var/www/tas
+      - ./php.ini:/usr/local/etc/php/php.ini
+networks:
+  tas_network:

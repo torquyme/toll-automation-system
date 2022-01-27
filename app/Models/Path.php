@@ -7,10 +7,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property int $id
- * @property Station $startStation
- * @property Station $endStation
+ * @property int $start_station
+ * @property int $end_station
  * @property float $cost
- * @property float $length
  */
 class Path extends Model
 {
@@ -23,6 +22,62 @@ class Path extends Model
     ];
 
     /**
+     * @return int
+     */
+    public function getStartStationId(): int
+    {
+        return $this->start_station;
+    }
+
+    /**
+     * @param int $id
+     * @return Path
+     */
+    public function setStartStationId(int $id): Path
+    {
+        $this->start_station = $id;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEndStationId(): int
+    {
+        return $this->end_station;
+    }
+
+    /**
+     * @param int $id
+     * @return Path
+     */
+    public function setEndStationId(int $id): Path
+    {
+        $this->end_station = $id;
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getCost(): float
+    {
+        return $this->cost;
+    }
+
+    /**
+     * @param float $cost
+     * @return Path
+     */
+    public function setCost(float $cost): Path
+    {
+        $this->cost = $cost;
+        return $this;
+    }
+
+    /**
+     * Get start station
+     *
      * @return HasOne
      */
     public function startStation(): HasOne
@@ -31,6 +86,8 @@ class Path extends Model
     }
 
     /**
+     * Get end station
+     *
      * @return HasOne
      */
     public function endStation(): HasOne
@@ -47,9 +104,7 @@ class Path extends Model
             'id' => $this->id,
             'startStation' => $this->startStation,
             'endStation' => $this->endStation,
-            'cost' => $this->cost,
-            'length' => $this->length,
-            'totalCost' => $this->cost * $this->length
+            'cost' => $this->cost
         ];
     }
 }

@@ -22,6 +22,9 @@ $router->get('/users', 'UserController@all');
 //Route to get a user by id
 $router->get('/user', 'UserController@find');
 
+//Route to get a user bills
+$router->get('/user/bills', 'UserController@bills');
+
 //Route to create a user
 $router->post('/user', 'UserController@create');
 
@@ -33,6 +36,9 @@ $router->get('/device', 'DeviceController@find');
 
 //Route to create a device
 $router->post('/device', 'DeviceController@create');
+
+//Route to get device logs
+$router->get('/device/logs', 'DeviceController@logs');
 
 //Route to get all the paths
 $router->get('/paths', 'PathController@all');
@@ -51,3 +57,9 @@ $router->get('/station', 'StationController@find');
 
 //Route to create a station
 $router->post('/station', 'StationController@create');
+
+//Route to enter a station
+$router->post('/station/enter', 'StationController@enter');
+
+//Route to exit a station
+$router->post('/station/exit', 'StationController@exit');
