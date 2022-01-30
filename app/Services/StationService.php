@@ -10,20 +10,34 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
+/**
+ * StationService
+ */
 class StationService
 {
     private DeviceService $deviceService;
 
+    /**
+     * @param DeviceService $deviceService
+     */
     public function __construct(DeviceService $deviceService)
     {
         $this->deviceService = $deviceService;
     }
 
+    /**
+     * @return Collection
+     */
     public function all(): Collection
     {
         return Station::all();
     }
 
+    /**
+     * @param int $stationId
+     * @param int $deviceId
+     * @return void
+     */
     public function enter(int $stationId, int $deviceId)
     {
         //Get device status
@@ -40,6 +54,11 @@ class StationService
         $this->logDevice($stationId, $deviceId, StationLogAction::ENTER);
     }
 
+    /**
+     * @param int $stationId
+     * @param int $deviceId
+     * @return void
+     */
     public function driveThrough(int $stationId, int $deviceId)
     {
         //Get device status
@@ -57,6 +76,11 @@ class StationService
 
     }
 
+    /**
+     * @param int $stationId
+     * @param int $deviceId
+     * @return void
+     */
     public function exit(int $stationId, int $deviceId)
     {
         //Get device status
@@ -73,6 +97,12 @@ class StationService
         $this->logDevice($stationId, $deviceId, StationLogAction::ENTER);
     }
 
+    /**
+     * @param int $stationId
+     * @param int $deviceId
+     * @param int $status
+     * @return void
+     */
     public function logDevice(int $stationId, int $deviceId, int $status)
     {
         $entry = new StationLog();

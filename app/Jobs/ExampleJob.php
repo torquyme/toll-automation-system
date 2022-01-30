@@ -2,6 +2,9 @@
 
 namespace App\Jobs;
 
+/**
+ *
+ */
 class ExampleJob extends Job
 {
     /**

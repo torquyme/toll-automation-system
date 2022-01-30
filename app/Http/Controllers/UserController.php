@@ -8,12 +8,20 @@ use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Validation\ValidationException;
 
+/**
+ * UserController
+ */
 class UserController extends Controller
 {
     private UserService $userService;
     private InvoiceService $invoiceService;
 
+    /**
+     * @param UserService $userService
+     * @param InvoiceService $invoiceService
+     */
     public function __construct(UserService $userService, InvoiceService $invoiceService)
     {
         $this->userService = $userService;
@@ -31,7 +39,7 @@ class UserController extends Controller
     /**
      * @param Request $request
      * @return mixed
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function find(Request $request): User
     {
@@ -45,8 +53,8 @@ class UserController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @return JsonResponse
+     * @throws ValidationException
      */
     public function create(Request $request): JsonResponse
     {
@@ -60,6 +68,11 @@ class UserController extends Controller
         return response()->json($user);
     }
 
+    /**
+     * @param Request $request
+     * @return Collection
+     * @throws ValidationException
+     */
     public function invoices(Request $request)
     {
         $data = $this->validate(

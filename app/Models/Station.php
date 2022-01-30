@@ -14,16 +14,25 @@ class Station extends Model
         'created_at', 'updated_at'
     ];
 
+    /**
+     * @return int
+     */
     public function getId(): int
     {
         return $this->id;
     }
 
+    /**
+     * @return string
+     */
     public function getName(): string
     {
         return $this->name;
     }
 
+    /**
+     * @return array
+     */
     public function jsonSerialize()
     {
         return [

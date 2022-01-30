@@ -9,11 +9,18 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
+/**
+ *
+ */
 class DeviceController extends Controller
 {
-    private $deviceService;
+    private DeviceService $deviceService;
 
+    /**
+     * @param DeviceService $deviceService
+     */
     public function __construct(DeviceService $deviceService)
     {
         $this->deviceService = $deviceService;
@@ -30,7 +37,7 @@ class DeviceController extends Controller
     /**
      * @param Request $request
      * @return Device
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function find(Request $request): Device
     {
@@ -45,7 +52,7 @@ class DeviceController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function create(Request $request): JsonResponse
     {
@@ -68,8 +75,8 @@ class DeviceController extends Controller
 
     /**
      * @param Request $request
-     * @return Device
-     * @throws \Illuminate\Validation\ValidationException
+     * @return Collection
+     * @throws ValidationException
      */
     public function logs(Request $request): Collection
     {

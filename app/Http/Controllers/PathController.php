@@ -6,7 +6,11 @@ use App\Models\Path;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Validation\ValidationException;
 
+/**
+ * PathController
+ */
 class PathController extends Controller
 {
     /**
@@ -20,7 +24,7 @@ class PathController extends Controller
     /**
      * @param Request $request
      * @return Path
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function find(Request $request): Path
     {
@@ -35,7 +39,7 @@ class PathController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function create(Request $request): JsonResponse
     {

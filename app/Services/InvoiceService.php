@@ -2,14 +2,17 @@
 
 namespace App\Services;
 
+use App\Exceptions\PathNotFoundException;
 use App\Models\Device;
 use App\Models\Invoice;
 use App\Models\Route;
-use App\Models\Station;
 use App\Models\StationLog;
 use App\Types\StationLogStatus;
 use Illuminate\Support\Collection;
 
+/**
+ * InvoiceService
+ */
 class InvoiceService
 {
     /**
@@ -19,22 +22,32 @@ class InvoiceService
     private DeviceService $deviceService;
     private PathService $pathService;
     private RouteService $routeService;
-    private StationService $stationService;
 
+    /**
+     * @param UserService $userService
+     * @param DeviceService $deviceService
+     * @param PathService $pathService
+     * @param RouteService $routeService
+     * @param StationService $stationService
+     */
     public function __construct(
-        UserService $userService,
-        DeviceService $deviceService,
-        PathService $pathService,
-        RouteService $routeService,
+        UserService    $userService,
+        DeviceService  $deviceService,
+        PathService    $pathService,
+        RouteService   $routeService,
         StationService $stationService
-    ) {
+    )
+    {
         $this->userService = $userService;
         $this->deviceService = $deviceService;
         $this->pathService = $pathService;
         $this->routeService = $routeService;
-        $this->stationService = $stationService;
     }
 
+    /**
+     * @param int $userId
+     * @return Collection
+     */
     public function getByUserId(int $userId): Collection
     {
         return Invoice::where('user_id', $userId)
@@ -42,7 +55,7 @@ class InvoiceService
     }
 
     /**
-     * @throws \App\Exceptions\PathNotFoundException
+     * @throws PathNotFoundException
      */
     public function calculateMonthlyForUser(int $userId)
     {
@@ -71,17 +84,23 @@ class InvoiceService
             $this->createInvoice($userId, $device->getId(), $routes);
 
             //Set logs as processed
-            $logs->each(function(StationLog $log) {
+            $logs->each(function (StationLog $log) {
                 $log->update(['status' => StationLogStatus::PROCESSED]);
             });
         }
     }
 
+    /**
+     * @param int $userId
+     * @param int $deviceId
+     * @param array $routes
+     * @return void
+     */
     public function createInvoice(int $userId, int $deviceId, array $routes)
     {
         //Calculate total amount
         $amount = array_reduce($routes, function (float $total, Route $route) {
-           return $total + $route->getCost();
+            return $total + $route->getCost();
         }, 0.0);
 
         //Convert routes array to string
@@ -96,6 +115,10 @@ class InvoiceService
             ->save();
     }
 
+    /**
+     * @return void
+     * @throws PathNotFoundException
+     */
     public function calculateMonthlyForAllUsers()
     {
         $users = $this->userService->all();

@@ -2,6 +2,9 @@
 
 namespace App\Types;
 
+/**
+ *
+ */
 class DeviceStatus
 {
     const DISABLED = -1;

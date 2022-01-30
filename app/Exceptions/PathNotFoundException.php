@@ -2,7 +2,12 @@
 
 namespace App\Exceptions;
 
-class PathNotFoundException extends \Exception
+use Exception;
+
+/**
+ * PathNotFoundException
+ */
+class PathNotFoundException extends Exception
 {
 
 }

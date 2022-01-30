@@ -2,7 +2,12 @@
 
 namespace App\Models;
 
-class Route implements \JsonSerializable
+use JsonSerializable;
+
+/**
+ * Route
+ */
+class Route implements JsonSerializable
 {
 
     /**
@@ -75,15 +80,21 @@ class Route implements \JsonSerializable
         return $this;
     }
 
+    /**
+     * @return bool
+     */
     public function isValid(): bool
     {
         return count($this->stations) > 1;
     }
 
+    /**
+     * @return array
+     */
     public function jsonSerialize(): array
     {
         $paths = [];
-        foreach($this->paths as $path) {
+        foreach ($this->paths as $path) {
             $paths[] = [
                 'from' => $path->startStation,
                 'to' => $path->endStation,

@@ -85,6 +85,9 @@ class Invoice extends Model
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function jsonSerialize()
     {
         return [

@@ -9,6 +9,9 @@ use App\Models\StationLog;
 use App\Types\StationLogAction;
 use Illuminate\Support\Collection;
 
+/**
+ * RouteService
+ */
 class RouteService
 {
     /**
@@ -25,7 +28,7 @@ class RouteService
             $previousStationId = $route->getStations()[$i - 1]->getId();
 
             if ($groupedByStartStation->has($previousStationId) === false) {
-                throw new PathNotFoundException("Not path found with start station {$previousStationId}");
+                throw new PathNotFoundException("Not path found with start station $previousStationId");
             }
 
             /** @var Collection $paths */
@@ -35,7 +38,7 @@ class RouteService
             /** @var Path $path */
             $path = $paths->where('end_station', $stationId)->first();
             if ($path === null) {
-                throw new PathNotFoundException("Not path found with end station {$stationId}");
+                throw new PathNotFoundException("Not path found with end station $stationId");
             }
 
             //Add path to route paths

@@ -2,6 +2,9 @@
 
 namespace App\Types;
 
+/**
+ * StationLogStatus
+ */
 class StationLogStatus
 {
     const PROCESSED = 1;
@@ -11,8 +14,9 @@ class StationLogStatus
      * @param int $status
      * @return string
      */
-    public static function mapToText(int $status) {
-        return match($status) {
+    public static function mapToText(int $status)
+    {
+        return match ($status) {
             self::NOT_PROCESSED => 'NOT PROCESSED',
             self::PROCESSED => 'PROCESSED'
         };

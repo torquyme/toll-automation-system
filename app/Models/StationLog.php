@@ -67,6 +67,9 @@ class StationLog extends Model
         return $this->hasOne(Device::class, 'id', 'device_id');
     }
 
+    /**
+     * @return array
+     */
     public function jsonSerialize()
     {
         return [

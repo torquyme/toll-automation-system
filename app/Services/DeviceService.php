@@ -9,6 +9,9 @@ use App\Types\StationLogStatus;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
 
+/**
+ *
+ */
 class DeviceService
 {
     /**
@@ -22,6 +25,10 @@ class DeviceService
         return Device::findOrFail($deviceId);
     }
 
+    /**
+     * @param int $userId
+     * @return Collection
+     */
     public function getByUserId(int $userId): Collection
     {
         return Device::where(['user_id' => $userId])
