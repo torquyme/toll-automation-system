@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDevicesLogTable extends Migration
+class CreateStationsLogsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -17,7 +17,8 @@ class CreateDevicesLogTable extends Migration
             $table->id();
             $table->foreignId('station_id')->references('id')->on('stations');
             $table->foreignId('device_id')->references('id')->on('devices');
-            $table->tinyInteger('status');
+            $table->tinyInteger('action'); //ENTER, EXIT, DRIVE_THROUGH
+            $table->tinyInteger('status'); //PROCESSED, NOT PROCESSED
             $table->timestamps();
         });
     }

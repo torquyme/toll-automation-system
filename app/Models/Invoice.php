@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -82,5 +83,17 @@ class Invoice extends Model
     {
         $this->amount = $amount;
         return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'amount' => $this->amount,
+            'routes' => json_decode($this->routes),
+            'user' => $this->user_id,
+            'device' => $this->device_id,
+            'createdAt' => Carbon::make($this->created_at)->format('c')
+        ];
     }
 }

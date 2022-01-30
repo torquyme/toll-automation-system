@@ -2,10 +2,12 @@
 
 namespace App\Services;
 
-use App\Exceptions\InvoiceNotFoundException;
+use App\Models\Device;
 use App\Models\Invoice;
+use App\Models\Route;
+use App\Models\Station;
+use App\Models\StationLog;
 use App\Types\StationLogStatus;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
 class InvoiceService
@@ -17,84 +19,81 @@ class InvoiceService
     private DeviceService $deviceService;
     private PathService $pathService;
     private RouteService $routeService;
+    private StationService $stationService;
 
-    public function __construct(UserService $userService, DeviceService $deviceService, PathService $pathService) {
+    public function __construct(
+        UserService $userService,
+        DeviceService $deviceService,
+        PathService $pathService,
+        RouteService $routeService,
+        StationService $stationService
+    ) {
         $this->userService = $userService;
         $this->deviceService = $deviceService;
         $this->pathService = $pathService;
+        $this->routeService = $routeService;
+        $this->stationService = $stationService;
     }
 
+    public function getByUserId(int $userId): Collection
+    {
+        return Invoice::where('user_id', $userId)
+            ->get();
+    }
+
+    /**
+     * @throws \App\Exceptions\PathNotFoundException
+     */
     public function calculateMonthlyForUser(int $userId)
     {
-        $currentMonth = Carbon::now()->month;
-
-        try {
-            $generationMonth = $this->getLastGenerationMonthByUserId($userId);
-
-            if ($currentMonth === $generationMonth) {
-                //We've already generated the invoices
-                return;
-            }
-        } catch (InvoiceNotFoundException $e) {
-            //No invoices generated for the specified user, continue with generation
-        }
-
         //Get user devices
         $devices = $this->deviceService->getByUserId($userId);
 
-        //Get paths grouped by station id
-        $pathsByStationId = $this->pathService->getPaths()->groupBy('start_station');
+        //Get paths
+        $paths = $this->pathService->all();
 
+        /** @var Device $device */
         foreach ($devices as $device) {
-            $logs = $this->deviceService->getDeviceLogs($device->id);
-            $routes = $this->routeService->getRoutesFromDeviceLogs($logs);
+            $logs = $this->deviceService->getLogs($device->getId());
+            $routes = $this->routeService->parseRoutesFromLogs($logs);
 
-            $deviceRoutes = [];
-            foreach ($routes as $route) {
-                $cost = $this->routeService->calculateRouteCost($route, $pathsByStationId);
-            }
-        }
-
-        //Calculate path cost
-
-
-        //Loop over each route
-        foreach ($groupedRoutes as $deviceId => $routes) {
-            $deviceRoutes = [];
-            $billAmount = 0;
-            foreach ($routes as $route) {
-
-                $visitedStations = $route['routeStations'];
-                $completeRoute = ['totalCost' => 0.0, 'paths' => []];
-
-                // We start from the second station
-                for ($i = 1; $i < count($visitedStations); $i++) {
-                    $stationId = $visitedStations[$i];
-                    $previousStationId = $visitedStations[$i - 1];
-
-                    /** @var Collection $paths */
-                    $paths = $groupedPath->get($previousStationId);
-                    if ($paths === null) {
-                        continue;
-                    }
-
-                    $path = $paths->where('end_station', $stationId)->first();
-
-                    $completeRoute['paths'][] = $path;
-                    $completeRoute['totalCost'] += $path->cost;
-                    $billAmount += $path->cost;
-                }
-
-                $deviceRoutes[] = $completeRoute;
+            //No routes have been driven, continue to next device
+            if (empty($routes) === true) {
+                continue;
             }
 
-            $userBill = new Invoice();
-            $userBill->user_id = $userId;
-            $userBill->device_id = $deviceId;
-            $userBill->routes = json_encode($deviceRoutes);
-            $userBill->amount = $billAmount;
-            $userBill->save();
+            //Loop over routes and calculate the cost
+            foreach ($routes as $route) {
+                $this->routeService->processRoute($route, $paths);
+            }
+
+            //Create invoice in database
+            $this->createInvoice($userId, $device->getId(), $routes);
+
+            //Set logs as processed
+            $logs->each(function(StationLog $log) {
+                $log->update(['status' => StationLogStatus::PROCESSED]);
+            });
         }
+    }
+
+    public function createInvoice(int $userId, int $deviceId, array $routes)
+    {
+        //Calculate total amount
+        $amount = array_reduce($routes, function (float $total, Route $route) {
+           return $total + $route->getCost();
+        }, 0.0);
+
+        //Convert routes array to string
+        $routes = json_encode($routes);
+
+        //Create invoice and save it
+        $invoice = new Invoice();
+        $invoice->setUserId($userId)
+            ->setDeviceId($deviceId)
+            ->setRoutes($routes)
+            ->setAmount($amount)
+            ->save();
     }
 
     public function calculateMonthlyForAllUsers()
@@ -103,21 +102,5 @@ class InvoiceService
         foreach ($users as $user) {
             $this->calculateMonthlyForUser($user->id);
         }
-    }
-
-    /**
-     * @throws InvoiceNotFoundException
-     */
-    public function getLastGenerationMonthByUserId(int $userId): int
-    {
-        $latest = Invoice::where('user_id', $userId)
-            ->orderBy('created_at', 'desc')
-            ->first('created_at');
-
-        if ($latest === null) {
-            throw new InvoiceNotFoundException();
-        }
-
-        return Carbon::make($latest->created_at)->month;
     }
 }

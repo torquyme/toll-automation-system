@@ -61,5 +61,8 @@ $router->post('/station', 'StationController@create');
 //Route to enter a station
 $router->post('/station/enter', 'StationController@enter');
 
+//Routo to drive through a station
+$router->post('/station/driveThrough', 'StationController@driveThrough');
+
 //Route to exit a station
 $router->post('/station/exit', 'StationController@exit');

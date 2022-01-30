@@ -2,30 +2,41 @@
 
 namespace App\Services;
 
+use App\Exceptions\PathNotFoundException;
 use App\Models\Path;
 use App\Models\Route;
-use App\Types\StationLogStatus;
+use App\Models\StationLog;
+use App\Types\StationLogAction;
 use Illuminate\Support\Collection;
 
 class RouteService
 {
-    public function calculateRouteCost(Route $route, Collection $pathsByStationId): Route
+    /**
+     * @throws PathNotFoundException
+     */
+    public function processRoute(Route &$route, Collection $paths)
     {
+        //Two way paths
+        $groupedByStartStation = $paths->groupBy('start_station');
+
         // We start from the second station
         for ($i = 1; $i < count($route->getStations()); $i++) {
-            $stationId = $route->getStations()[$i];
-            $previousStationId = $route->getStations()[$i - 1];
+            $stationId = $route->getStations()[$i]->getId();
+            $previousStationId = $route->getStations()[$i - 1]->getId();
 
-            if ($pathsByStationId->has($previousStationId) === false) {
-                continue;
+            if ($groupedByStartStation->has($previousStationId) === false) {
+                throw new PathNotFoundException("Not path found with start station {$previousStationId}");
             }
 
             /** @var Collection $paths */
-            $paths = $pathsByStationId->get($previousStationId);
+            $paths = $groupedByStartStation->get($previousStationId);
 
             //Get path identified by route station id and route end station
             /** @var Path $path */
             $path = $paths->where('end_station', $stationId)->first();
+            if ($path === null) {
+                throw new PathNotFoundException("Not path found with end station {$stationId}");
+            }
 
             //Add path to route paths
             $route->addPath($path);
@@ -35,25 +46,26 @@ class RouteService
                 $route->getCost() + $path->getCost()
             );
         }
-
-        return $route;
     }
 
     /**
      * @param Collection $logs
      * @return Route[]
      */
-    public function getRoutesFromDeviceLogs(Collection $logs): array
+    public function parseRoutesFromLogs(Collection $logs): array
     {
         $routes = [];
         $route = new Route();
+
+        /** @var StationLog $log */
         foreach ($logs as $log) {
-            $route->addStation($log->station_id);
+            $route->addStation($log->station);
 
-            if ($log->status === StationLogStatus::EXIT) {
-                $routes[] = $route;
+            if ($log->getAction() === StationLogAction::EXIT) {
+                if ($route->isValid()) {
+                    $routes[] = $route;
+                }
 
-                //Completed the route, clear the route path stations
                 $route = new Route();
             }
         }

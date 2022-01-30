@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $start_station
  * @property int $end_station
  * @property float $cost
+ * @property Station $startStation
+ * @property Station $endStation
  */
 class Path extends Model
 {
@@ -18,7 +20,7 @@ class Path extends Model
     ];
 
     protected $casts = [
-        'cost' => 'float', 'length' => 'float'
+        'cost' => 'float'
     ];
 
     /**

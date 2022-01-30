@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 
 class PathService
 {
-    public function getPaths(): Collection
+    public function all(): Collection
     {
         return Path::all();
     }

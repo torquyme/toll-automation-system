@@ -17,7 +17,7 @@ class CreateDevicesTable extends Migration
             $table->id();
             $table->timestamps();
             $table->foreignId('user_id')->references('id')->on('users');
-            $table->tinyInteger('status');
+            $table->tinyInteger('status'); //DISABLED, STANDBY, IN_MOTORWAY
         });
     }
 

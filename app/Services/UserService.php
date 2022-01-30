@@ -11,4 +11,15 @@ class UserService
     {
         return User::all();
     }
+
+    public function create(string $name, string $surname, string $email): User
+    {
+        $user = (new User())->setName($name)
+            ->setSurname($surname)
+            ->setEmail($email);
+
+        $user->save();
+
+        return $user;
+    }
 }

@@ -53,7 +53,7 @@ class DeviceController extends Controller
             $request,
             [
                 'userId' => 'string|required|exists:users,id',
-                'status' => Rule::in([DeviceStatus::NOT_ACTIVE, DeviceStatus::ACTIVE])
+                'status' => Rule::in([DeviceStatus::DISABLED, DeviceStatus::STANDBY])
             ]
         );
 
@@ -78,6 +78,6 @@ class DeviceController extends Controller
             ['id' => 'int|required']
         );
 
-        return $this->deviceService->getDeviceLogs($data['id']);
+        return $this->deviceService->getLogsByDeviceId($data['id']);
     }
 }

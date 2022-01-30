@@ -3,23 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Invoice;
-use App\Services\DeviceService;
-use App\Services\PathService;
-use App\Types\StationLogStatus;
+use App\Services\InvoiceService;
+use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
 class UserController extends Controller
 {
-    private $deviceService;
-    private $pathService;
+    private UserService $userService;
+    private InvoiceService $invoiceService;
 
-    public function __construct(DeviceService $deviceService, PathService $pathService)
+    public function __construct(UserService $userService, InvoiceService $invoiceService)
     {
-        $this->deviceService = $deviceService;
-        $this->pathService = $pathService;
+        $this->userService = $userService;
+        $this->invoiceService = $invoiceService;
     }
 
     /**
@@ -57,11 +55,7 @@ class UserController extends Controller
             ['name' => 'string|required', 'surname' => 'string|required', 'email' => 'email|required|unique:users']
         );
 
-        $user = new User();
-        $user->name = $data['name'];
-        $user->surname = $data['surname'];
-        $user->email = $data['email'];
-        $user->save();
+        $user = $this->userService->create($data['name'], $data['surname'], $data['email']);
 
         return response()->json($user);
     }
@@ -73,8 +67,7 @@ class UserController extends Controller
             ['id' => 'int|required']
         );
 
-        return Invoice::where('user_id', $data['id'])
-            ->get();
+        return $this->invoiceService->getByUserId($data['id']);
     }
 
 }

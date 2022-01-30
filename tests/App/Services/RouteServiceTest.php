@@ -6,6 +6,7 @@ use App\Models\Path;
 use App\Models\Route;
 use App\Models\StationLog;
 use App\Types\StationLogStatus;
+use App\Types\StationLogAction;
 use Illuminate\Support\Collection;
 
 class RouteServiceTest extends \TestCase
@@ -19,21 +20,27 @@ class RouteServiceTest extends \TestCase
         $enterStationLog = new StationLog();
         $enterStationLog->station_id = 1;
         $enterStationLog->device_id = 1;
-        $enterStationLog->status = StationLogStatus::ENTER;
+        $enterStationLog->status = StationLogAction::ENTER;
+
+        $passedByStationLog = new StationLog();
+        $passedByStationLog->station_id = 2;
+        $passedByStationLog->device_id = 1;
+        $passedByStationLog->status = StationLogAction::PASSED_BY;
 
         $exitStationLog = new StationLog();
-        $exitStationLog->station_id = 2;
+        $exitStationLog->station_id = 3;
         $exitStationLog->device_id = 1;
-        $exitStationLog->status = StationLogStatus::EXIT;
+        $exitStationLog->status = StationLogAction::EXIT;
 
-        $routes = $routeService->getRoutesFromDeviceLogs(Collection::make([$enterStationLog, $exitStationLog]));
+        $routes = $routeService->parseRoutesFromLogs(Collection::make([$enterStationLog, $passedByStationLog, $exitStationLog]));
         $this->assertNotEmpty($routes);
         $this->assertCount(1, $routes);
 
         $route = array_pop($routes);
-        $this->assertCount(2, $route->getStations());
+        $this->assertCount(3, $route->getStations());
         $this->assertEquals(1, $route->getStations()[0]);
         $this->assertEquals(2, $route->getStations()[1]);
+        $this->assertEquals(3, $route->getStations()[2]);
     }
 
     public function testGetRoutesFromDeviceLogsNoLogs()
@@ -41,7 +48,7 @@ class RouteServiceTest extends \TestCase
         /** @var RouteService $routeService */
         $routeService = app(RouteService::class);
 
-        $routes = $routeService->getRoutesFromDeviceLogs(Collection::make([]));
+        $routes = $routeService->parseRoutesFromLogs(Collection::make([]));
         $this->assertEmpty($routes);
     }
 
@@ -65,7 +72,7 @@ class RouteServiceTest extends \TestCase
 
         $paths = Collection::make([$firstPath, $secondPath])->groupBy('start_station');
 
-        $route = $routeService->calculateRouteCost($route, $paths);
+        $route = $routeService->processRoute($route, $paths);
         $this->assertCount(2, $route->getPaths());
         $this->assertEquals(220, $route->getCost());
     }

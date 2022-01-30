@@ -2,13 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Invoice;
-use App\Services\DeviceService;
 use App\Services\InvoiceService;
-use App\Services\PathService;
-use App\Types\StationLogStatus;
 use Illuminate\Console\Command;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 
 class GenerateMonthlyUserInvoices extends Command
@@ -35,7 +30,5 @@ class GenerateMonthlyUserInvoices extends Command
         $this->info("Calculating monthly bill for user {$userId}");
 
         $this->invoiceService->calculateMonthlyForUser($userId);
-
-        $this->info(json_encode($completeRoute, JSON_PRETTY_PRINT));
     }
 }

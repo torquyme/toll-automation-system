@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Station;
 use App\Services\StationService;
+use App\Types\StationLogAction;
 use App\Types\StationLogStatus;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -83,7 +84,27 @@ class StationController extends Controller
             ]
         );
 
-        $this->stationService->logDevice($data['stationId'], $data['deviceId'], StationLogStatus::ENTER);
+        $this->stationService->enter($data['stationId'], $data['deviceId']);
+
+        return response()->json($data);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function driveThrough(Request $request): JsonResponse
+    {
+        $data = $this->validate(
+            $request,
+            [
+                'deviceId' => 'int|required|exists:devices,id',
+                'stationId' => 'int|required|exists:stations,id'
+            ]
+        );
+
+        $this->stationService->driveThrough($data['stationId'], $data['deviceId']);
 
         return response()->json($data);
     }
@@ -103,7 +124,7 @@ class StationController extends Controller
             ]
         );
 
-        $this->stationService->logDevice($data['stationId'], $data['deviceId'], StationLogStatus::EXIT);
+        $this->stationService->exit($data['stationId'], $data['deviceId']);
 
         return response()->json($data);
     }

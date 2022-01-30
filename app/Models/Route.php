@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-class Route
+class Route implements \JsonSerializable
 {
+
     /**
      * @var float
      */
@@ -15,7 +16,7 @@ class Route
     private array $paths = [];
 
     /**
-     * @var int[]
+     * @var Station[]
      */
     private array $stations = [];
 
@@ -33,7 +34,7 @@ class Route
      */
     public function setCost(float $cost): Route
     {
-        $this->cost = $cost;
+        $this->cost = round($cost, 2);
         return $this;
     }
 
@@ -57,7 +58,7 @@ class Route
     }
 
     /**
-     * @return array
+     * @return Station[]
      */
     public function getStations(): array
     {
@@ -65,12 +66,35 @@ class Route
     }
 
     /**
-     * @param int $stationId
+     * @param Station $station
      * @return $this
      */
-    public function addStation(int $stationId): Route
+    public function addStation(Station $station): Route
     {
-        $this->stations[] = $stationId;
+        $this->stations[] = $station;
         return $this;
+    }
+
+    public function isValid(): bool
+    {
+        return count($this->stations) > 1;
+    }
+
+    public function jsonSerialize(): array
+    {
+        $paths = [];
+        foreach($this->paths as $path) {
+            $paths[] = [
+                'from' => $path->startStation,
+                'to' => $path->endStation,
+                'cost' => $path->cost
+            ];
+        }
+
+        return [
+            'cost' => $this->cost,
+            'stations' => $this->stations,
+            'paths' => $paths
+        ];
     }
 }

@@ -4,15 +4,17 @@ namespace App\Types;
 
 class StationLogStatus
 {
-    const ENTER = 1;
-    const EXIT = 2;
+    const PROCESSED = 1;
+    const NOT_PROCESSED = 0;
 
-    public static function mapToText(int $status): string
-    {
+    /**
+     * @param int $status
+     * @return string
+     */
+    public static function mapToText(int $status) {
         return match($status) {
-            self::ENTER => 'ENTER',
-            self::EXIT => 'EXIT',
-            default => 'NOT FOUND'
+            self::NOT_PROCESSED => 'NOT PROCESSED',
+            self::PROCESSED => 'PROCESSED'
         };
     }
 }

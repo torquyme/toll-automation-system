@@ -2,18 +2,50 @@
 
 namespace App\Models;
 
+use App\Types\StationLogAction;
 use App\Types\StationLogStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
+ * @property int $id
  * @property int $station_id
  * @property int $device_id
+ * @property int $action
  * @property int $status
+ * @property Station $station
+ * @property Device $device
  */
 class StationLog extends Model
 {
     protected $table = 'stations_logs';
+    protected $fillable = [
+        'status'
+    ];
+
+    /**
+     * @return int
+     */
+    public function getStationId(): int
+    {
+        return $this->station_id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDeviceId(): int
+    {
+        return $this->device_id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAction(): int
+    {
+        return $this->action;
+    }
 
     /**
      * Get station
@@ -47,7 +79,8 @@ class StationLog extends Model
                 'id' => $this->station->id,
                 'name' => $this->station->name
             ],
-            'action' => StationLogStatus::mapToText($this->status)
+            'action' => StationLogAction::mapToText($this->action),
+            'status' => StationLogStatus::mapToText($this->status)
         ];
     }
 }
