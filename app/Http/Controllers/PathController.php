@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Path;
-use Illuminate\Http\JsonResponse;
+use App\Services\PathService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\ValidationException;
@@ -14,11 +14,24 @@ use Illuminate\Validation\ValidationException;
 class PathController extends Controller
 {
     /**
+     * @var PathService
+     */
+    private PathService $pathService;
+
+    /**
+     * @param PathService $pathService
+     */
+    public function __construct(PathService $pathService)
+    {
+        $this->pathService = $pathService;
+    }
+
+    /**
      * @return Collection
      */
     public function all(): Collection
     {
-        return Path::all();
+        return $this->pathService->all();
     }
 
     /**
@@ -33,15 +46,15 @@ class PathController extends Controller
             ['id' => 'int|required']
         );
 
-        return Path::find($data['id']);
+        return $this->pathService->get($data['id']);
     }
 
     /**
      * @param Request $request
-     * @return JsonResponse
+     * @return Collection
      * @throws ValidationException
      */
-    public function create(Request $request): JsonResponse
+    public function create(Request $request): Collection
     {
         $data = $this->validate(
             $request,
@@ -53,18 +66,8 @@ class PathController extends Controller
             ]
         );
 
-        $path = new Path();
-        $path->start_station = $data['startStationId'];
-        $path->end_station = $data['endStationId'];
-        $path->cost = $data['cost'];
-        $path->save();
-
-        $returnPath = new Path();
-        $returnPath->end_station = $data['startStationId'];
-        $returnPath->start_station = $data['endStationId'];
-        $returnPath->cost = $data['cost'];
-        $returnPath->save();
-
-        return response()->json([$path, $returnPath]);
+        return $this->pathService->create(
+            $data['startStationId'], $data['endStationId'], $data['cost'], $data['length']
+        );
     }
 }

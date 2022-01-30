@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Device;
 use App\Services\DeviceService;
 use App\Types\DeviceStatus;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\Rule;
@@ -51,10 +50,10 @@ class DeviceController extends Controller
 
     /**
      * @param Request $request
-     * @return JsonResponse
+     * @return Device
      * @throws ValidationException
      */
-    public function create(Request $request): JsonResponse
+    public function create(Request $request): Device
     {
         $data = $this->validate(
             $request,
@@ -64,12 +63,7 @@ class DeviceController extends Controller
             ]
         );
 
-        $device = new Device();
-        $device->user_id = $data['userId'];
-        $device->status = $data['status'];
-        $device->save();
-
-        return response()->json(true);
+        return $this->deviceService->create($data['userId'], $data['status']);
     }
 
 

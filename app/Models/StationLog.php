@@ -32,6 +32,16 @@ class StationLog extends Model
     }
 
     /**
+     * @param int $stationId
+     * @return $this
+     */
+    public function setStationId(int $stationId): StationLog
+    {
+        $this->station_id = $stationId;
+        return $this;
+    }
+
+    /**
      * @return int
      */
     public function getDeviceId(): int
@@ -40,11 +50,49 @@ class StationLog extends Model
     }
 
     /**
+     * @param int $device_id
+     * @return StationLog
+     */
+    public function setDeviceId(int $device_id): StationLog
+    {
+        $this->device_id = $device_id;
+        return $this;
+    }
+
+    /**
      * @return int
      */
     public function getAction(): int
     {
         return $this->action;
+    }
+
+    /**
+     * @param int $action
+     * @return StationLog
+     */
+    public function setAction(int $action): StationLog
+    {
+        $this->action = $action;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatus(): int
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param int $status
+     * @return StationLog
+     */
+    public function setStatus(int $status): StationLog
+    {
+        $this->status = $status;
+        return $this;
     }
 
     /**

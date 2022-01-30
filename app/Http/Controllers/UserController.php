@@ -15,7 +15,14 @@ use Illuminate\Validation\ValidationException;
  */
 class UserController extends Controller
 {
+    /**
+     * @var UserService
+     */
     private UserService $userService;
+
+    /**
+     * @var InvoiceService
+     */
     private InvoiceService $invoiceService;
 
     /**
@@ -48,7 +55,7 @@ class UserController extends Controller
             ['id' => 'int|required']
         );
 
-        return User::findOrFail($data['id']);
+        return $this->userService->get($data['id']);
     }
 
     /**
@@ -73,7 +80,7 @@ class UserController extends Controller
      * @return Collection
      * @throws ValidationException
      */
-    public function invoices(Request $request)
+    public function invoices(Request $request): Collection
     {
         $data = $this->validate(
             $request,

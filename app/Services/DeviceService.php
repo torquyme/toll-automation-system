@@ -10,13 +10,12 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
 
 /**
- *
+ * DeviceService
  */
 class DeviceService
 {
     /**
      * @param int $deviceId
-     *
      * @return Device
      * @throws ModelNotFoundException
      */
@@ -34,6 +33,21 @@ class DeviceService
         return Device::where(['user_id' => $userId])
             ->whereIn('status', [DeviceStatus::STANDBY, DeviceStatus::IN_MOTORWAY])
             ->get();
+    }
+
+    /**
+     * @param int $userId
+     * @param int $status
+     * @return Device
+     */
+    public function create(int $userId, int $status): Device
+    {
+        $device = new Device();
+        $device->user_id = $userId;
+        $device->status = $status;
+        $device->save();
+
+        return $device;
     }
 
     /**

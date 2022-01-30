@@ -15,6 +15,9 @@ use Illuminate\Validation\Rule;
  */
 class StationService
 {
+    /**
+     * @var DeviceService
+     */
     private DeviceService $deviceService;
 
     /**
@@ -35,6 +38,15 @@ class StationService
 
     /**
      * @param int $stationId
+     * @return Station
+     */
+    public function get(int $stationId): Station
+    {
+        return Station::find($stationId);
+    }
+
+    /**
+     * @param int $stationId
      * @param int $deviceId
      * @return void
      */
@@ -51,7 +63,7 @@ class StationService
         );
 
         //Log motorway enter
-        $this->logDevice($stationId, $deviceId, StationLogAction::ENTER);
+        $this->createLog($stationId, $deviceId, StationLogAction::ENTER);
     }
 
     /**
@@ -72,7 +84,7 @@ class StationService
         );
 
         //Log motorway drive through
-        $this->logDevice($stationId, $deviceId, StationLogAction::ENTER);
+        $this->createLog($stationId, $deviceId, StationLogAction::DRIVE_THROUGH);
 
     }
 
@@ -94,21 +106,21 @@ class StationService
         );
 
         //Log motorway exit
-        $this->logDevice($stationId, $deviceId, StationLogAction::ENTER);
+        $this->createLog($stationId, $deviceId, StationLogAction::EXIT);
     }
 
     /**
      * @param int $stationId
      * @param int $deviceId
-     * @param int $status
+     * @param int $action
      * @return void
      */
-    public function logDevice(int $stationId, int $deviceId, int $status)
+    private function createLog(int $stationId, int $deviceId, int $action)
     {
-        $entry = new StationLog();
-        $entry->station_id = $stationId;
-        $entry->device_id = $deviceId;
-        $entry->status = $status;
+        $entry = (new StationLog())
+            ->setStationId($stationId)
+            ->setDeviceId($deviceId)
+            ->setAction($action);
 
         $entry->save();
     }

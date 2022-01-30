@@ -34,7 +34,7 @@ class StationController extends Controller
      */
     public function all(): Collection
     {
-        return Station::all();
+        return $this->stationService->all();
     }
 
     /**
@@ -49,7 +49,7 @@ class StationController extends Controller
             ['id' => 'int|required']
         );
 
-        return Station::find($data['id']);
+        return $this->stationService->get($data['id']);
     }
 
     /**

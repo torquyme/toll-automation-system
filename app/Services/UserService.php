@@ -19,6 +19,15 @@ class UserService
     }
 
     /**
+     * @param int $userId
+     * @return User
+     */
+    public function get(int $userId): User
+    {
+        return User::findOrFail($userId);
+    }
+
+    /**
      * @param string $name
      * @param string $surname
      * @param string $email
