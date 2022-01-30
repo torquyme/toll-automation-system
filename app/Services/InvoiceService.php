@@ -67,7 +67,7 @@ class InvoiceService
 
         /** @var Device $device */
         foreach ($devices as $device) {
-            $logs = $this->deviceService->getLogs($device->getId());
+            $logs = $this->deviceService->getLogsToBeProcessed($device->getId());
             $routes = $this->routeService->parseRoutesFromLogs($logs);
 
             //No routes have been driven, continue to next device

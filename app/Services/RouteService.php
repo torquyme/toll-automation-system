@@ -19,7 +19,6 @@ class RouteService
      */
     public function processRoute(Route &$route, Collection $paths)
     {
-        //Two way paths
         $groupedByStartStation = $paths->groupBy('start_station');
 
         // We start from the second station
