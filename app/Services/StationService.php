@@ -77,6 +77,8 @@ class StationService
             //Update device status
             $device->setStatus(DeviceStatus::IN_MOTORWAY);
             $device->save();
+
+            DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
             throw $e;
@@ -133,6 +135,8 @@ class StationService
             //Update device status
             $device->setStatus(DeviceStatus::STANDBY);
             $device->save();
+
+            DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
             throw $e;
