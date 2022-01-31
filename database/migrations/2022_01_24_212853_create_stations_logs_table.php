@@ -15,8 +15,8 @@ class CreateStationsLogsTable extends Migration
     {
         Schema::create('stations_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('station_id')->references('id')->on('stations');
-            $table->foreignId('device_id')->references('id')->on('devices');
+            $table->foreignId('station_id')->references('id')->on('stations')->cascadeOnDelete();
+            $table->foreignId('device_id')->references('id')->on('devices')->cascadeOnDelete();
             $table->tinyInteger('action'); //ENTER, EXIT, DRIVE_THROUGH
             $table->tinyInteger('status'); //PROCESSED, NOT PROCESSED
             $table->timestamps();
@@ -30,6 +30,6 @@ class CreateStationsLogsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('devices_log');
+        Schema::dropIfExists('stations_logs');
     }
 }

@@ -16,8 +16,8 @@ class CreatePathsTable extends Migration
         Schema::create('paths', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('start_station')->references('id')->on('stations');
-            $table->foreignId('end_station')->references('id')->on('stations');
+            $table->foreignId('start_station')->references('id')->on('stations')->cascadeOnDelete();
+            $table->foreignId('end_station')->references('id')->on('stations')->cascadeOnDelete();
             $table->float('cost');
         });
     }

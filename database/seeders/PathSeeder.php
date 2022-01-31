@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Station;
 use Database\Factories\PathFactory;
-use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
 
 class PathSeeder extends Seeder

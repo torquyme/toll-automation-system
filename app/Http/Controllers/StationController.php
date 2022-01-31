@@ -31,6 +31,13 @@ class StationController extends Controller
 
     /**
      * @return Collection
+     *
+     * @OA\Get(
+     *     path="/api/stations",
+     *     summary="Get all the stations",
+     *     tags={"Station"},
+     *     @OA\Response(response="200", description="Returns all the stations registered in the system")
+     * )
      */
     public function all(): Collection
     {
@@ -41,6 +48,22 @@ class StationController extends Controller
      * @param Request $request
      * @return Station
      * @throws ValidationException
+     *
+     * @OA\Get(
+     *     path="/api/station",
+     *     summary="Get a station by id",
+     *     tags={"Station"},
+     *     @OA\Parameter(
+     *        name="id",
+     *        required=true,
+     *        in="query",
+     *        description="station id",
+     *        @OA\Schema(
+     *          type="integer"
+     *        )
+     *     ),
+     *     @OA\Response(response="200", description="Returns the requested station")
+     * )
      */
     public function find(Request $request): Station
     {

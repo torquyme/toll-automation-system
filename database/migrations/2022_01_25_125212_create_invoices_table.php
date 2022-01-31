@@ -15,8 +15,8 @@ class CreateInvoicesTable extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->references('id')->on('users');
-            $table->foreignId('device_id')->references('id')->on('devices');
+            $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->foreignId('device_id')->references('id')->on('devices')->cascadeOnDelete();
             $table->longText('routes');
             $table->decimal('amount');
             $table->timestamps();

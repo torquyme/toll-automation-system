@@ -37,16 +37,39 @@ class UserController extends Controller
 
     /**
      * @return Collection
+     *
+     * @OA\Get(
+     *     path="/api/users",
+     *     summary="Get all the users",
+     *     tags={"User"},
+     *     @OA\Response(response="200", description="Returns all the users registered in the system")
+     * )
      */
     public function all(): Collection
     {
-        return User::all();
+        return $this->userService->all();
     }
 
     /**
      * @param Request $request
      * @return mixed
      * @throws ValidationException
+     *
+     * @OA\Get(
+     *     path="/api/user",
+     *     summary="Get a user by id",
+     *     tags={"User"},
+     *     @OA\Parameter(
+     *        name="id",
+     *        required=true,
+     *        in="query",
+     *        description="User id",
+     *        @OA\Schema(
+     *          type="integer"
+     *        )
+     *     ),
+     *     @OA\Response(response="200", description="Returns the requested user")
+     * )
      */
     public function find(Request $request): User
     {

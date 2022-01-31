@@ -15,6 +15,14 @@ use Illuminate\Support\Collection;
 class DeviceService
 {
     /**
+     * @return Collection
+     */
+    public function all(): Collection
+    {
+        return Device::all();
+    }
+
+    /**
      * @param int $deviceId
      * @return Device
      * @throws ModelNotFoundException

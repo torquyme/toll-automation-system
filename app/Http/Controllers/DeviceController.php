@@ -11,7 +11,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 /**
- *
+ * DeviceController
  */
 class DeviceController extends Controller
 {
@@ -27,16 +27,39 @@ class DeviceController extends Controller
 
     /**
      * @return Collection
+     *
+     * @OA\Get(
+     *     path="/api/devices",
+     *     summary="Get all the devices",
+     *     tags={"Device"},
+     *     @OA\Response(response="200", description="Returns all the devices registered in the system")
+     * )
      */
     public function all(): Collection
     {
-        return Device::all();
+        return $this->deviceService->all();
     }
 
     /**
      * @param Request $request
      * @return Device
      * @throws ValidationException
+     *
+     * @OA\Get(
+     *     path="/api/device",
+     *     summary="Get a device by id",
+     *     tags={"Device"},
+     *     @OA\Parameter(
+     *        name="id",
+     *        required=true,
+     *        in="query",
+     *        description="Device id",
+     *        @OA\Schema(
+     *          type="integer"
+     *        )
+     *     ),
+     *     @OA\Response(response="200", description="Returns the requested device")
+     * )
      */
     public function find(Request $request): Device
     {
@@ -45,7 +68,7 @@ class DeviceController extends Controller
             ['id' => 'int|required']
         );
 
-        return Device::findOrFail($data['id']);
+        return $this->deviceService->get($data['id']);
     }
 
     /**
@@ -58,7 +81,7 @@ class DeviceController extends Controller
         $data = $this->validate(
             $request,
             [
-                'userId' => 'string|required|exists:users,id',
+                'userId' => 'int|required|exists:users,id',
                 'status' => Rule::in([DeviceStatus::DISABLED, DeviceStatus::STANDBY])
             ]
         );
@@ -66,11 +89,26 @@ class DeviceController extends Controller
         return $this->deviceService->create($data['userId'], $data['status']);
     }
 
-
     /**
      * @param Request $request
      * @return Collection
      * @throws ValidationException
+     *
+     * @OA\Get(
+     *     path="/api/device/logs",
+     *     summary="Get logs by device id",
+     *     tags={"Device"},
+     *     @OA\Parameter(
+     *        name="id",
+     *        required=true,
+     *        in="query",
+     *        description="Device id",
+     *        @OA\Schema(
+     *          type="integer"
+     *        )
+     *     ),
+     *     @OA\Response(response="200", description="Returns the device logs")
+     * )
      */
     public function logs(Request $request): Collection
     {

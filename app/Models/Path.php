@@ -26,6 +26,14 @@ class Path extends Model
     /**
      * @return int
      */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return int
+     */
     public function getStartStationId(): int
     {
         return $this->start_station;

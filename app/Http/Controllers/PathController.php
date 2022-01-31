@@ -28,6 +28,13 @@ class PathController extends Controller
 
     /**
      * @return Collection
+     *
+     * @OA\Get(
+     *     path="/api/paths",
+     *     summary="Get all the paths",
+     *     tags={"Path"},
+     *     @OA\Response(response="200", description="Returns all the paths registered in the system")
+     * )
      */
     public function all(): Collection
     {
@@ -38,6 +45,22 @@ class PathController extends Controller
      * @param Request $request
      * @return Path
      * @throws ValidationException
+     *
+     * @OA\Get(
+     *     path="/api/path",
+     *     summary="Get a path by id",
+     *     tags={"Path"},
+     *     @OA\Parameter(
+     *        name="id",
+     *        required=true,
+     *        in="query",
+     *        description="Path id",
+     *        @OA\Schema(
+     *          type="integer"
+     *        )
+     *     ),
+     *     @OA\Response(response="200", description="Returns the requested path")
+     * )
      */
     public function find(Request $request): Path
     {
@@ -61,13 +84,12 @@ class PathController extends Controller
             [
                 'startStationId' => 'int|required|exists:stations,id',
                 'endStationId' => 'int|required|exists:stations,id|different:startStationId',
-                'cost' => 'numeric|required|min:1.0|max:99.0',
-                'length' => 'numeric|min:1.0|max:200.0'
+                'cost' => 'numeric|required|min:1.0|max:99.0'
             ]
         );
 
         return $this->pathService->create(
-            $data['startStationId'], $data['endStationId'], $data['cost'], $data['length']
+            $data['startStationId'], $data['endStationId'], $data['cost']
         );
     }
 }
