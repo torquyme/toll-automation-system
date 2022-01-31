@@ -1,0 +1,148 @@
+openapi: 3.0.0
+info:
+  title: 'Toll automation system api'
+  description: 'Base controller'
+  version: '1'
+paths:
+  /api/devices:
+    get:
+      tags:
+        - Device
+      summary: 'Get all the devices'
+      operationId: 3f9c181dedb9ff8fdc64ef548310f216
+      responses:
+        '200':
+          description: 'Returns all the devices registered in the system'
+  /api/device:
+    get:
+      tags:
+        - Device
+      summary: 'Get a device by id'
+      operationId: 182154a59ac48acd366541c7a067067d
+      parameters:
+        -
+          name: id
+          in: query
+          description: 'Device id'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Returns the requested device'
+  /pet:
+    post:
+      tags:
+        - pet
+      summary: 'Add a new pet to the store'
+      description: ''
+      operationId: addPet
+      requestBody:
+        description: 'Pet object that needs to be added to the store'
+        required: true
+        content:
+          application/json:
+            schema: {  }
+      responses:
+        '405':
+          description: 'Invalid input'
+      security:
+        -
+          petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+  /api/device/logs:
+    get:
+      tags:
+        - Device
+      summary: 'Get logs by device id'
+      operationId: 8c09eda5a7e7fb81b25ed2b2b133ffdd
+      parameters:
+        -
+          name: id
+          in: query
+          description: 'Device id'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Returns the device logs'
+  /api/paths:
+    get:
+      tags:
+        - Path
+      summary: 'Get all the paths'
+      operationId: 534d2ffec55148b35a93a9a76f850be6
+      responses:
+        '200':
+          description: 'Returns all the paths registered in the system'
+  /api/path:
+    get:
+      tags:
+        - Path
+      summary: 'Get a path by id'
+      operationId: ed92b2c1244ae5fdf9571bc28825bd23
+      parameters:
+        -
+          name: id
+          in: query
+          description: 'Path id'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Returns the requested path'
+  /api/stations:
+    get:
+      tags:
+        - Station
+      summary: 'Get all the stations'
+      operationId: 18bae42bd321b4377d433d45ad4bcc08
+      responses:
+        '200':
+          description: 'Returns all the stations registered in the system'
+  /api/station:
+    get:
+      tags:
+        - Station
+      summary: 'Get a station by id'
+      operationId: a4b1e3f21e2d47c1f0974004f4f50e8f
+      parameters:
+        -
+          name: id
+          in: query
+          description: 'station id'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Returns the requested station'
+  /api/users:
+    get:
+      tags:
+        - User
+      summary: 'Get all the users'
+      operationId: 73e4177671849bfddfd61a56eafa2aff
+      responses:
+        '200':
+          description: 'Returns all the users registered in the system'
+  /api/user:
+    get:
+      tags:
+        - User
+      summary: 'Get a user by id'
+      operationId: a1254ff9efb13dcb70f894c21958e81c
+      parameters:
+        -
+          name: id
+          in: query
+          description: 'User id'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Returns the requested user'

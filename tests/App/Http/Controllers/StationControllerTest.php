@@ -6,6 +6,12 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\Device;
+use App\Models\Path;
+use App\Models\Station;
+use App\Types\DeviceStatus;
+use Illuminate\Testing\Fluent\AssertableJson;
+
 class StationControllerTest extends \TestCase
 {
     public function setUp(): void
@@ -29,31 +35,73 @@ class StationControllerTest extends \TestCase
 
     public function testAll()
     {
+        $this->artisan('db:seed --class=StationSeeder');
 
-    }
-
-    public function testCreate()
-    {
-
-    }
-
-    public function testEnter()
-    {
-
-    }
-
-    public function testExit()
-    {
-
+        $response = $this->json('get', '/api/stations');
+        $response->assertResponseStatus(200);
+        $this->assertNotEmpty($response->response);
     }
 
     public function testFind()
     {
+        $this->artisan('db:seed --class=StationSeeder');
+        $station = Station::first();
 
+        $response = $this->json('get', '/api/station', ['id' => $station->getId()]);
+        $response->response->assertJson(function(AssertableJson $json) {
+            $json->hasAll(
+                ['id', 'name']
+            );
+        });
+    }
+
+    public function testCreate()
+    {
+        $response = $this->post('/api/station', ['name' => "test"]);
+        $response->response->assertJson(function(AssertableJson $json) {
+            $json->hasAll(['id', 'name']);
+        });
+    }
+
+    public function testEnter()
+    {
+        $this->artisan('db:seed --class=StationSeeder');
+        $this->artisan('db:seed --class=UserSeeder');
+        $this->artisan('db:seed --class=DeviceSeeder');
+        $station = Station::first();
+        $device = Device::first();
+        $device->setStatus(DeviceStatus::STANDBY)->save();
+
+        $response = $this->post('/api/station/enter', ['stationId' => $station->getId(), 'deviceId' => $device->getId()]);
+        $response->assertResponseStatus(200);
+        $response->receiveJson(['stationId' => $station->getId(), 'deviceId' => $device->getId()]);
+    }
+
+    public function testExit()
+    {
+        $this->artisan('db:seed --class=StationSeeder');
+        $this->artisan('db:seed --class=UserSeeder');
+        $this->artisan('db:seed --class=DeviceSeeder');
+        $station = Station::first();
+        $device = Device::first();
+        $device->setStatus(DeviceStatus::IN_MOTORWAY)->save();
+
+        $response = $this->post('/api/station/exit', ['stationId' => $station->getId(), 'deviceId' => $device->getId()]);
+        $response->assertResponseStatus(200);
+        $response->receiveJson(['stationId' => $station->getId(), 'deviceId' => $device->getId()]);
     }
 
     public function testDriveThrough()
     {
+        $this->artisan('db:seed --class=StationSeeder');
+        $this->artisan('db:seed --class=UserSeeder');
+        $this->artisan('db:seed --class=DeviceSeeder');
+        $station = Station::first();
+        $device = Device::first();
+        $device->setStatus(DeviceStatus::IN_MOTORWAY)->save();
 
+        $response = $this->post('/api/station/driveThrough', ['stationId' => $station->getId(), 'deviceId' => $device->getId()]);
+        $response->assertResponseStatus(200);
+        $response->receiveJson(['stationId' => $station->getId(), 'deviceId' => $device->getId()]);
     }
 }

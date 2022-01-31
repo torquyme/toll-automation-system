@@ -52,7 +52,18 @@ class UserControllerTest extends \TestCase
 
     public function testInvoices()
     {
+        $this->artisan('db:seed');
 
+        $user = User::first();
+        $this->artisan("invoice:monthly-for-user {$user->getId()}");
+
+        $response = $this->json('get', '/api/user/invoices', ['id' => $user->getId()]);
+        $response->assertResponseStatus(200);
+        $response->response->assertJson(function(AssertableJson $json) {
+            $json->first(function(AssertableJson $json) {
+                $json->hasAll(['id', 'amount', 'routes', 'user', 'device', 'createdAt']);
+            });
+        });
     }
 
     public function testCreate()

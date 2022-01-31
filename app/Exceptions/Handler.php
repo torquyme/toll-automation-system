@@ -66,6 +66,6 @@ class Handler extends ExceptionHandler
             return response("Resource not found");
         }
 
-        return parent::render($request, $exception);
+        return response()->json(["error" => $exception->getMessage()]);
     }
 }
