@@ -1,0 +1,518 @@
+{
+	"info": {
+		"_postman_id": "4e5a3f8e-e729-4d42-ba09-2b98aadbb118",
+		"name": "Toll Automation System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Get users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://tas.local/api/users",
+							"protocol": "http",
+							"host": [
+								"tas",
+								"local"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a user by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://tas.local/api/user?id=1",
+							"protocol": "http",
+							"host": [
+								"tas",
+								"local"
+							],
+							"path": [
+								"api",
+								"user"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user invoices",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://tas.local/api/user/invoices?id=1",
+							"protocol": "http",
+							"host": [
+								"tas",
+								"local"
+							],
+							"path": [
+								"api",
+								"user",
+								"invoices"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Torquato",
+									"type": "text"
+								},
+								{
+									"key": "surname",
+									"value": "Ruggiero",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "torquyme@gmail.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://tas.local/api/user",
+							"protocol": "http",
+							"host": [
+								"tas",
+								"local"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Device",
+			"item": [
+				{
+					"name": "Get devices",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://tas.local/api/devices",
+							"protocol": "http",
+							"host": [
+								"tas",
+								"local"
+							],
+							"path": [
+								"api",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get device logs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/devices",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a device by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://tas.local/api/device?id=1",
+							"protocol": "http",
+							"host": [
+								"tas",
+								"local"
+							],
+							"path": [
+								"api",
+								"device"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a device",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "userId",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://tas.local/api/device",
+							"protocol": "http",
+							"host": [
+								"tas",
+								"local"
+							],
+							"path": [
+								"api",
+								"device"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Path",
+			"item": [
+				{
+					"name": "Get paths",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://tas.local/api/paths",
+							"protocol": "http",
+							"host": [
+								"tas",
+								"local"
+							],
+							"path": [
+								"api",
+								"paths"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a path by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://tas.local/api/path?id=1",
+							"protocol": "http",
+							"host": [
+								"tas",
+								"local"
+							],
+							"path": [
+								"api",
+								"path"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a path",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "startStationId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "endStationId",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "cost",
+									"value": "5.0",
+									"type": "text"
+								},
+								{
+									"key": "length",
+									"value": "100.0",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://tas.local/api/path",
+							"protocol": "http",
+							"host": [
+								"tas",
+								"local"
+							],
+							"path": [
+								"api",
+								"path"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Station",
+			"item": [
+				{
+					"name": "Get stations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://tas.local/api/stations",
+							"protocol": "http",
+							"host": [
+								"tas",
+								"local"
+							],
+							"path": [
+								"api",
+								"stations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Enter a station",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "stationId",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "deviceId",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://tas.local/api/station/enter",
+							"protocol": "http",
+							"host": [
+								"tas",
+								"local"
+							],
+							"path": [
+								"api",
+								"station",
+								"enter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Drive through a station",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "stationId",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "deviceId",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://tas.local/api/station/driveThrough",
+							"protocol": "http",
+							"host": [
+								"tas",
+								"local"
+							],
+							"path": [
+								"api",
+								"station",
+								"driveThrough"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Exit a station",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "stationId",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "deviceId",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://tas.local/api/station/exit",
+							"protocol": "http",
+							"host": [
+								"tas",
+								"local"
+							],
+							"path": [
+								"api",
+								"station",
+								"exit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a station by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://tas.local/api/station?id=1",
+							"protocol": "http",
+							"host": [
+								"tas",
+								"local"
+							],
+							"path": [
+								"api",
+								"station"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a station",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Foggia",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://tas.local/api/station",
+							"protocol": "http",
+							"host": [
+								"tas",
+								"local"
+							],
+							"path": [
+								"api",
+								"station"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
